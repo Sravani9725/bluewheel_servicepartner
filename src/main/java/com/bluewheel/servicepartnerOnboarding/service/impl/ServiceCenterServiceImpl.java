@@ -311,7 +311,7 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 		if (center.getFlex() != null
 				&& !center.getFlex().getFlexInstallationStatus().equals(FlexStatusEnum.FlexInstallationcomplete.name())) {
 			throw new BluewheelBusinessException(
-					"Please complete the Verification process before proceeding to Flex Installation process",
+					"Please complete the Flex Installation process before proceeding with photography",
 					HttpStatus.NOT_FOUND, "INVALID.DATA");
 		}
 		additionalValidations(phVO);
@@ -372,7 +372,7 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 		if (center.getPhotography() != null
 				&& !center.getPhotography().getPhStatus().equals(FlexStatusEnum.FlexInstallationcomplete.name())) {
 			throw new BluewheelBusinessException(
-					"Please complete the Verification process before proceeding to Flex Installation process",
+					"Please complete the Photography process before proceeding with Training",
 					HttpStatus.NOT_FOUND, "INVALID.DATA");
 		}
 		additionalValidations(phVO);
@@ -417,7 +417,7 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 		if (center.getTraining() != null
 				&& !center.getTraining().getTrainingStatus().equals(StatusEnum.complete.name())) {
 			throw new BluewheelBusinessException(
-					"Please complete the Verification process before proceeding to Flex Installation process",
+					"Please complete the Training and then proceed to on boarding.",
 					HttpStatus.NOT_FOUND, "INVALID.DATA");
 		}
 		if(center.getTraining()!=null && !center.getTraining().getTrRepId().equals(phVO.getRepId())) {
