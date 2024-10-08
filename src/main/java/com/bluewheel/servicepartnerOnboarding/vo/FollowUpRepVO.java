@@ -17,6 +17,9 @@ public class FollowUpRepVO {
 	private String serviceCenterOwnerName;
 	private String serviceCenterAddress;
 	private String serviceCenterPhonenumber;
+	private Double latitude;
+	private Double longitude;
+	private String status;
 	private FollowUpVO followUpDetails;
 
 }
