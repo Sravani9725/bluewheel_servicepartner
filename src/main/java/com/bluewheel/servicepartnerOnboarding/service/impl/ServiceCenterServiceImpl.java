@@ -479,6 +479,7 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 				.serviceCenterAddress(center.getServiceCenterAddress()).serviceCenterName(center.getServiceCenterName())
 				.phoneNumber(center.getServiceCenterPhoneNumber()).registrationStatus(center.getRegistrationStatus())
 				.serviceCenterOwnerName(center.getServiceCenterOwnerName())
+				.latitude(center.getLatitude()).longitude(center.getLongitude())
 				.subscriptionType(center.getSubscriptionType())
 				.registrationFollowup(buildFollowup(center.getReason(), center.getFollowupDate()))
 				.verificationDetails(getVerifierVO(center.getVerification())).flexDetails(getFlexVO(center.getFlex()))
@@ -510,7 +511,7 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 		if (photography == null)
 			return null;
 		return CommonVO.builder().comments(photography.getComments()).repId(photography.getPhRepId())
-				.status(photography.getPhStatus())
+				.status(photography.getPhStatus()).phDate(photography.getPhDate())
 				.followup(buildFollowup(photography.getReason(), photography.getFollowupDate())).build();
 	}
 
@@ -518,7 +519,7 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 		if (flex == null)
 			return null;
 		return CommonVO.builder().comments(flex.getComments()).repId(flex.getFlexRepId())
-				.status(flex.getFlexInstallationStatus())
+				.status(flex.getFlexInstallationStatus()).phDate(flex.getPhAppointmentDate())
 				.followup(buildFollowup(flex.getReason(), flex.getFollowupDate())).build();
 	}
 

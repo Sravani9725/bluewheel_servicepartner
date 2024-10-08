@@ -24,6 +24,10 @@ public class GetServiceCenterVO {
 	
 	private String salesRepId;
 	
+	private Double latitude;
+	
+	private Double longitude;
+	
 	private LocalDate registeredDate;
 	
 	private String registrationComments;
