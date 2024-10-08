@@ -61,7 +61,7 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 	private List<String> phSalesRep;
 	
 	@Value("#{'${servicecenter.trainingAndOnboard.sales.rep.ids}'.split(',')}")
-	private List<String> TainingAndOnboardSalesRep;
+	private List<String> tainingAndOnboardSalesRep;
 	
 	private final ServiceCenterRepository servicecenterRepo;
 	private final VerificationRepository verificationRepo;
@@ -256,7 +256,7 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 
 		if (flex == null && !flexSalesRep.contains(flexvo.getRepId())) {
 			throw new BluewheelBusinessException(
-					"Verifier Rep Id does not match with existing verifier rep ids for verifying a service center",
+					"Flex Rep Id does not match with existing flex rep ids",
 					HttpStatus.BAD_REQUEST, "INVALID.DATA");
 		}
 		additionalFlexValidations(flexvo);
@@ -269,6 +269,7 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 		flex.setFlexInstallationStatus(
 				getOrDefault(flexvo.getStatus(), flex != null ? flex.getFlexInstallationStatus() : null));
 		flex.setFlexRepId(getOrDefault(flexvo.getRepId(), flex != null ? flex.getFlexRepId() : null));
+		flex.setPhAppointmentDate(getOrDefault(flexvo.getPhDate(), flex != null ? flex.getPhAppointmentDate() : null));
 		flex.setServiceCenter(center);
 		flex.setUpdatedAt(Timestamp.from(Instant.now()));
 		if (flexvo.getFollowup() != null) {
@@ -296,6 +297,13 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 			throw new BluewheelBusinessException("Please provide follow-up details with reason and date",
 					HttpStatus.EXPECTATION_FAILED, "INVALID.DATA");
 		}
+		
+		if (flexvo.getStatus() != null
+				&& flexvo.getStatus().equals(FlexStatusEnum.FlexInstallationcomplete.name())
+				&& flexvo.getPhDate() == null) {
+			throw new BluewheelBusinessException("Please provide photography appointment date", HttpStatus.EXPECTATION_FAILED,
+					"INVALID.DATA");
+		}
 
 	}
 
@@ -317,12 +325,12 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 		additionalValidations(phVO);
 		Photography photo = phRepo.getByServiceCenter(center);
 		if (photo != null && !photo.getPhRepId().equals(phVO.getRepId())) {
-			throw new BluewheelBusinessException("Verifier Rep Id mismatch", HttpStatus.BAD_REQUEST, "INVALID.DATA");
+			throw new BluewheelBusinessException("Photography Rep Id mismatch", HttpStatus.BAD_REQUEST, "INVALID.DATA");
 		}
 
 		if (photo == null && !phSalesRep.contains(phVO.getRepId())) {
 			throw new BluewheelBusinessException(
-					"Verifier Rep Id does not match with existing verifier rep ids for verifying a service center",
+					"Photography Rep Id does not match with existing photography rep ids",
 					HttpStatus.BAD_REQUEST, "INVALID.DATA");
 		}
 		
@@ -334,6 +342,7 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 		photo.setPhStatus(
 				getOrDefault(phVO.getStatus(), photo != null ? photo.getPhStatus() : null));
 		photo.setPhRepId(getOrDefault(phVO.getRepId(), photo != null ? photo.getPhRepId() : null));
+		photo.setPhDate(getOrDefault(phVO.getPhDate(), photo != null ? photo.getPhDate() : null));
 		photo.setServiceCenter(center);
 		photo.setUpdatedAt(Timestamp.from(Instant.now()));
 		if (phVO.getFollowup() != null) {
@@ -378,12 +387,12 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 		additionalValidations(phVO);
 		Training photo = trainingRepo.getByServiceCenter(center);
 		if (photo != null && !photo.getTrRepId().equals(phVO.getRepId())) {
-			throw new BluewheelBusinessException("Verifier Rep Id mismatch", HttpStatus.BAD_REQUEST, "INVALID.DATA");
+			throw new BluewheelBusinessException("Trainer Rep Id mismatch", HttpStatus.BAD_REQUEST, "INVALID.DATA");
 		}
 
-		if (photo == null && !verifierSalesRep.contains(phVO.getRepId())) {
+		if (photo == null && !tainingAndOnboardSalesRep.contains(phVO.getRepId())) {
 			throw new BluewheelBusinessException(
-					"Verifier Rep Id does not match with existing verifier rep ids for verifying a service center",
+					"Training Rep Id does not match with existing training rep ids",
 					HttpStatus.BAD_REQUEST, "INVALID.DATA");
 		}
 		
@@ -421,18 +430,18 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 					HttpStatus.NOT_FOUND, "INVALID.DATA");
 		}
 		if(center.getTraining()!=null && !center.getTraining().getTrRepId().equals(phVO.getRepId())) {
-			throw new BluewheelBusinessException("Sales rep id should match with sales rep id of training",
+			throw new BluewheelBusinessException("rep id should match with rep id of training",
 					HttpStatus.NOT_FOUND, "INVALID.DATA");
 		}
 		additionalValidations(phVO);
 		Onboard photo = onBoardRepo.getByServiceCenter(center);
 		if (photo != null && !photo.getTrRepId().equals(phVO.getRepId())) {
-			throw new BluewheelBusinessException("Verifier Rep Id mismatch", HttpStatus.BAD_REQUEST, "INVALID.DATA");
+			throw new BluewheelBusinessException("Rep Id mismatch", HttpStatus.BAD_REQUEST, "INVALID.DATA");
 		}
 
-		if (photo == null && !TainingAndOnboardSalesRep.contains(phVO.getRepId())) {
+		if (photo == null && !tainingAndOnboardSalesRep.contains(phVO.getRepId())) {
 			throw new BluewheelBusinessException(
-					"Verifier Rep Id does not match with existing verifier rep ids for verifying a service center",
+					"Onboard Rep Id does not match with existing Onboard rep ids",
 					HttpStatus.BAD_REQUEST, "INVALID.DATA");
 		}
 		
@@ -451,7 +460,7 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 			photo.setFollowupDate(
 					getOrDefault(phVO.getFollowup().getFollowUpDate(), photo != null ? photo.getFollowupDate() : null));
 		}
-		return "Training details added/updated for a service center";
+		return "Onboard details added/updated for a service center";
 	}
 
 	@Override
@@ -536,7 +545,7 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 		if(onBoardSalesReps.contains(repId)) {
 			List<ServiceCenter> centers = servicecenterRepo.findBySalesRepId(repId);
 			for(ServiceCenter c : centers) {
-				if(c.getRegistrationStatus().equals(RegistrationStatusEnum.Followup.name()))
+				if(c.getRegistrationStatus().equals(RegistrationStatusEnum.Followup.name()) || c.getRegistrationStatus().equals(RegistrationStatusEnum.Assigned.name()))
 					returnList.add(followUpRepVOMapper(c,c.getReason(),c.getFollowupDate()));
 					
 			}
@@ -545,7 +554,7 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 		if(verifierSalesRep.contains(repId)) {
 			List<Verification> verifications = verificationRepo.getByVerifierRepId(repId);
 			for(Verification v :verifications) {
-				if(v.getVerificationStatus().equals(VerificationStatusEnum.VerificationPending.name()))
+				if(v.getVerificationStatus().equals(VerificationStatusEnum.VerificationPending.name()) || (v.getVerificationStatus().equals(VerificationStatusEnum.Assigned.name())))
 					returnList.add(followUpRepVOMapper(v.getServiceCenter(),v.getReason(),v.getFollowupDate()));
 			}
 			flag=true;
@@ -553,7 +562,7 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 		if(flexSalesRep.contains(repId)) {
 			List<Flex> flexs = flexRepo.getByFlexRepId(repId);
 			for(Flex f :flexs) {
-				if(f.getFlexInstallationStatus().equals(FlexStatusEnum.flexInstallationPending.name()))
+				if(f.getFlexInstallationStatus().equals(FlexStatusEnum.flexInstallationPending.name()) || f.getFlexInstallationStatus().equals(FlexStatusEnum.Assigned.name()))
 					returnList.add(followUpRepVOMapper(f.getServiceCenter(),f.getReason(),f.getFollowupDate()));
 			}
 			flag=true;
@@ -561,20 +570,20 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 		if(phSalesRep.contains(repId)) {
 			List<Photography> photos = phRepo.getByPhRepId(repId);
 			for(Photography p :photos) {
-				if(p.getPhStatus().equals(StatusEnum.pending.name()))
+				if(p.getPhStatus().equals(StatusEnum.pending.name()) || p.getPhStatus().equals(StatusEnum.Assigned.name()))
 					returnList.add(followUpRepVOMapper(p.getServiceCenter(),p.getReason(),p.getFollowupDate()));
 			}
 			flag=true;
 		}
-		if(TainingAndOnboardSalesRep.contains(repId)) {
+		if(tainingAndOnboardSalesRep.contains(repId)) {
 			List<Training> trainings = trainingRepo.getByTrRepId(repId);
 			for(Training p :trainings) {
-				if(p.getTrainingStatus().equals(StatusEnum.pending.name()))
+				if(p.getTrainingStatus().equals(StatusEnum.pending.name()) || p.getTrainingStatus().equals(StatusEnum.Assigned.name()))
 					returnList.add(followUpRepVOMapper(p.getServiceCenter(),p.getReason(),p.getFollowupDate()));
 			}
 			List<Onboard> onboards = onBoardRepo.getByTrRepId(repId);
 			for(Onboard p :onboards) {
-				if(p.getOnboardStatus().equals(StatusEnum.pending.name()))
+				if(p.getOnboardStatus().equals(StatusEnum.pending.name()) || p.getOnboardStatus().equals(StatusEnum.Assigned.name()))
 					returnList.add(followUpRepVOMapper(p.getServiceCenter(),p.getReason(),p.getFollowupDate()));
 			}
 			flag=true;

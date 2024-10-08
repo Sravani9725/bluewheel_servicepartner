@@ -21,6 +21,10 @@ public class CommonVO {
 	
 	private String comments;
 	
+	@FutureOrPresent(message="Registered date cannot be of a past time")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+	private LocalDate phDate;
+	
 	@NotBlank(message="Please provide phoneNumber")
 	private String phoneNumber;
 	

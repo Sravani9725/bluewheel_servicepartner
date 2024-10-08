@@ -53,6 +53,9 @@ public class Flex implements Serializable{
 	@Column(name = "updated_at")
 	private Timestamp updatedAt;
 	
+	@Column(name="ph_appointment_date")
+	private LocalDate phAppointmentDate;
+	
 	@OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "service_center_id", referencedColumnName = "id")
 	private ServiceCenter serviceCenter;

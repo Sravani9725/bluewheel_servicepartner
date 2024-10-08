@@ -42,6 +42,8 @@ public class Photography implements Serializable{
 	@Column(name = "ph_status")
 	private String phStatus;
 	
+	@Column(name="ph_date")
+	private LocalDate phDate;
 	
 	private String comments;
 	
