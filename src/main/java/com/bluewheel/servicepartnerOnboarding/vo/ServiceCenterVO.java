@@ -24,6 +24,10 @@ public class ServiceCenterVO {
 	
 	private String serviceCenterName;
 	
+	private Double latitude;
+	
+	private Double longitude;
+	
 	@NotBlank(message="sales person rep id is mandatory")
 	private String salesRepId;
 	

@@ -49,6 +49,10 @@ public class ServiceCenter implements Serializable{
 	@Column(name="service_center_name")
 	private String serviceCenterName;
 	
+	private Double latitude;
+	
+	private Double longitude;
+	
 	@Column(name="sales_rep_id")
 	private String salesRepId;
 	
