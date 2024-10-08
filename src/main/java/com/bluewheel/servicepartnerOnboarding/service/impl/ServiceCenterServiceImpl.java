@@ -388,7 +388,7 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 		}
 
 		if (center.getPhotography() != null
-				&& !center.getPhotography().getPhStatus().equals(FlexStatusEnum.FlexInstallationcomplete.name())) {
+				&& !center.getPhotography().getPhStatus().equals(StatusEnum.complete.name())) {
 			throw new BluewheelBusinessException(
 					"Please complete the Photography process before proceeding with Training", HttpStatus.NOT_FOUND,
 					"INVALID.DATA");
