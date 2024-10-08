@@ -360,6 +360,7 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 			photo.setFollowupDate(
 					getOrDefault(phVO.getFollowup().getFollowUpDate(), photo != null ? photo.getFollowupDate() : null));
 		}
+		phRepo.save(photo);
 		return "Photography details added/updated for a service center";
 	}
 
@@ -418,6 +419,7 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 			photo.setFollowupDate(
 					getOrDefault(phVO.getFollowup().getFollowUpDate(), photo != null ? photo.getFollowupDate() : null));
 		}
+		trainingRepo.save(photo);
 		return "Training details added/updated for a service center";
 	}
 
@@ -464,6 +466,7 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 			photo.setFollowupDate(
 					getOrDefault(phVO.getFollowup().getFollowUpDate(), photo != null ? photo.getFollowupDate() : null));
 		}
+		onBoardRepo.save(photo);
 		return "Onboard details added/updated for a service center";
 	}
 
