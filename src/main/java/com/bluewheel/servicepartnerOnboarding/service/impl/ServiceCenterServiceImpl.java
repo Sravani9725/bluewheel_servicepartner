@@ -115,6 +115,9 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 			throw new BluewheelBusinessException("Sales Rep Id mismatch error message", HttpStatus.BAD_REQUEST,
 					"INVALID.DATA");
 		}
+		if(center !=null && center.getRegistrationStatus().equals(RegistrationStatusEnum.Registered.name()) && serviceCenter.getRegistrationStatus()!=null) {
+			throw new BluewheelBusinessException("Service center registration completed, cannot update status",HttpStatus.BAD_REQUEST,"INVALID>REQUEST");
+		}
 
 		// Create a new ServiceCenter if center is null (onboarding a new service
 		// center)
@@ -179,6 +182,9 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 		if (verification != null && !verification.getVerifierRepId().equals(verificationvo.getVerifierRepId())) {
 			throw new BluewheelBusinessException("Verifier Rep Id mismatch", HttpStatus.BAD_REQUEST, "INVALID.DATA");
 		}
+		
+		if(verification!=null && verification.getVerificationStatus().equals(VerificationStatusEnum.Verified.name()) && verificationvo.getVerificationStatus()!=null)
+			throw new BluewheelBusinessException("Verification completed, cannot change status again",HttpStatus.BAD_REQUEST,"INVALID_REQUEST");
 
 		if (verification == null && !verifierSalesRep.contains(verificationvo.getVerifierRepId())) {
 			throw new BluewheelBusinessException(
@@ -273,6 +279,10 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 			throw new BluewheelBusinessException("Flex Rep Id does not match with existing flex rep ids",
 					HttpStatus.BAD_REQUEST, "INVALID.DATA");
 		}
+		
+		if(flex != null && flex.getFlexInstallationStatus().equals(FlexStatusEnum.FlexInstallationcomplete.name()) && flexvo.getStatus()!=null) {
+			throw new BluewheelBusinessException("Flex Installation completed, cannot update status",HttpStatus.BAD_REQUEST,"INVALID_REQUEST");
+		}
 		additionalFlexValidations(flexvo);
 		if (flex == null) {
 			flex = new Flex();
@@ -344,7 +354,10 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 			throw new BluewheelBusinessException("Photography Rep Id does not match with existing photography rep ids",
 					HttpStatus.BAD_REQUEST, "INVALID.DATA");
 		}
-
+		if (photo == null && photo.getPhStatus().equals(StatusEnum.complete.name())&& phVO.getStatus()!=null) {
+			throw new BluewheelBusinessException("Photography already completed,cannot update status",
+					HttpStatus.BAD_REQUEST, "INVALID.DATA");
+		}
 		if (photo == null) {
 			photo = new Photography();
 			photo.setCreatedAt(Timestamp.from(Instant.now()));
@@ -394,8 +407,10 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 					"Please complete the Photography process before proceeding with Training", HttpStatus.NOT_FOUND,
 					"INVALID.DATA");
 		}
+		
 		additionalValidations(phVO);
 		Training photo = trainingRepo.getByServiceCenter(center);
+		
 		if (photo != null && !photo.getTrRepId().equals(phVO.getRepId())) {
 			throw new BluewheelBusinessException("Trainer Rep Id mismatch", HttpStatus.BAD_REQUEST, "INVALID.DATA");
 		}
@@ -404,7 +419,8 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 			throw new BluewheelBusinessException("Training Rep Id does not match with existing training rep ids",
 					HttpStatus.BAD_REQUEST, "INVALID.DATA");
 		}
-
+		if(photo !=null && photo.getTrainingStatus().equals(StatusEnum.complete.name())&& phVO.getStatus()!=null)
+			throw new BluewheelBusinessException("Traning completed, cannot update status",HttpStatus.BAD_REQUEST,"INVALID_REQUEST");
 		if (photo == null) {
 			photo = new Training();
 			photo.setCreatedAt(Timestamp.from(Instant.now()));
@@ -451,7 +467,8 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 			throw new BluewheelBusinessException("Onboard Rep Id does not match with existing Onboard rep ids",
 					HttpStatus.BAD_REQUEST, "INVALID.DATA");
 		}
-
+		if(photo !=null && photo.getOnboardStatus().equals(StatusEnum.complete.name())&& phVO.getStatus()!=null)
+			throw new BluewheelBusinessException("Onboarding completed, cannot update status",HttpStatus.BAD_REQUEST,"INVALID_REQUEST");
 		if (photo == null) {
 			photo = new Onboard();
 			photo.setCreatedAt(Timestamp.from(Instant.now()));
