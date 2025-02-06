@@ -13,7 +13,7 @@ import lombok.Setter;
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class GetServiceCenterVO {
 	
-	
+	private Integer serviceCenterId;
 	private String phoneNumber;
 	
 	private String serviceCenterOwnerName;

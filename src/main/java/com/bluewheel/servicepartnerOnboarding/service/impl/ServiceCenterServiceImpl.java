@@ -494,7 +494,7 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 			throw new BluewheelBusinessException("Service Center not found with provided phone number",
 					HttpStatus.NOT_FOUND, "INVALID.DATA");
 		}
-		return GetServiceCenterVO.builder().salesRepId(center.getSalesRepId())
+		return GetServiceCenterVO.builder().serviceCenterId(center.getId()).salesRepId(center.getSalesRepId())
 				.registeredDate(center.getRegisteredDate()).registrationComments(center.getComments())
 				.serviceCenterAddress(center.getServiceCenterAddress()).serviceCenterName(center.getServiceCenterName())
 				.phoneNumber(center.getServiceCenterPhoneNumber()).registrationStatus(center.getRegistrationStatus())
@@ -512,7 +512,7 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 	private CommonVO getOnboardVO(Onboard onboard) {
 		if (onboard == null)
 			return null;
-		return CommonVO.builder().comments(onboard.getComments()).repId(onboard.getTrRepId())
+		return CommonVO.builder().id(onboard.getId()).comments(onboard.getComments()).repId(onboard.getTrRepId())
 				.status(onboard.getOnboardStatus())
 				.followup(buildFollowup(onboard.getReason(), onboard.getFollowupDate())).build();
 
@@ -521,7 +521,7 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 	private CommonVO getTrainingVO(Training training) {
 		if (training == null)
 			return null;
-		return CommonVO.builder().comments(training.getComments()).repId(training.getTrRepId())
+		return CommonVO.builder().id(training.getId()).comments(training.getComments()).repId(training.getTrRepId())
 				.status(training.getTrainingStatus())
 				.followup(buildFollowup(training.getReason(), training.getFollowupDate())).build();
 
@@ -530,7 +530,7 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 	private CommonVO getPhotographyVO(Photography photography) {
 		if (photography == null)
 			return null;
-		return CommonVO.builder().comments(photography.getComments()).repId(photography.getPhRepId())
+		return CommonVO.builder().id(photography.getId()).comments(photography.getComments()).repId(photography.getPhRepId())
 				.status(photography.getPhStatus()).phDate(photography.getPhDate())
 				.followup(buildFollowup(photography.getReason(), photography.getFollowupDate())).build();
 	}
@@ -538,7 +538,7 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 	private CommonVO getFlexVO(Flex flex) {
 		if (flex == null)
 			return null;
-		return CommonVO.builder().comments(flex.getComments()).repId(flex.getFlexRepId())
+		return CommonVO.builder().id(flex.getId()).comments(flex.getComments()).repId(flex.getFlexRepId())
 				.status(flex.getFlexInstallationStatus()).phDate(flex.getPhAppointmentDate())
 				.followup(buildFollowup(flex.getReason(), flex.getFollowupDate())).build();
 	}
@@ -546,7 +546,7 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 	private VerificationVO getVerifierVO(Verification verification) {
 		if (verification == null)
 			return null;
-		return VerificationVO.builder().comments(verification.getComments())
+		return VerificationVO.builder().verificationId(verification.getId()).comments(verification.getComments())
 				.flexDimensions(verification.getFlexDimensions())
 				.flexInstallationDate(verification.getFlexInstallationDate())
 				.verificationStatus(verification.getVerificationStatus()).verifierName(verification.getVerifierName())

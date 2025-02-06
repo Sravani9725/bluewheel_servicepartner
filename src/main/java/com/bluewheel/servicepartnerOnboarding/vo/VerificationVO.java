@@ -15,7 +15,7 @@ import lombok.Setter;
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class VerificationVO {
 	
-	
+	private Integer verificationId;
 	private String verifierName;
 	@NotBlank(message="sales person rep id is mandatory")
 	private String verifierRepId;

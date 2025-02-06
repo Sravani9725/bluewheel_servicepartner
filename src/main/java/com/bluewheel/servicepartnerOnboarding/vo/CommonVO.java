@@ -14,6 +14,8 @@ import lombok.Setter;
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class CommonVO {
 	
+	private Integer id;
+	
 	@NotBlank(message="sales person rep id is mandatory")
 	private String repId;
 	
