@@ -20,6 +20,7 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.awscore.exception.AwsServiceException;
 import software.amazon.awssdk.core.ResponseInputStream;
@@ -69,10 +70,11 @@ public class DigitalOceanSpaceService {
     public void init() {
         AwsBasicCredentials awsCreds = AwsBasicCredentials.create(accessKey, secretKey);
         this.s3Client = S3Client.builder()
-                .region(Region.of("blr1"))  // Use your space's region
                 .endpointOverride(URI.create(endpoint))
+                .region(Region.of("blr1"))
                 .credentialsProvider(StaticCredentialsProvider.create(awsCreds))
                 .build();
+
         
         this.s3Presigner = S3Presigner.builder().region(Region.of("blr1"))
 				.credentialsProvider(StaticCredentialsProvider.create(awsCreds))
