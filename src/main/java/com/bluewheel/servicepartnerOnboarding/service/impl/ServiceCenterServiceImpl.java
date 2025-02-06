@@ -355,7 +355,7 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 			throw new BluewheelBusinessException("Photography Rep Id does not match with existing photography rep ids",
 					HttpStatus.BAD_REQUEST, "INVALID.DATA");
 		}
-		if (photo == null && photo.getPhStatus().equals(StatusEnum.complete.name())&& phVO.getStatus()!=null) {
+		if (photo != null && photo.getPhStatus().equals(StatusEnum.complete.name())&& phVO.getStatus()!=null) {
 			throw new BluewheelBusinessException("Photography already completed,cannot update status",
 					HttpStatus.BAD_REQUEST, "INVALID.DATA");
 		}
