@@ -37,10 +37,12 @@ public class Documents implements Serializable{
 		@Column(name = "id")
 		private Integer id;
 		
+		@Column(name="document_name")
 		private String filename;
 		
 		private String key;
 		
+		@Column(name="doc_category")
 		private String docCategory;
 		
 		@ManyToOne
@@ -48,7 +50,7 @@ public class Documents implements Serializable{
 		private ServiceCenter serviceCenter;
 		
 		@ManyToOne
-	    @JoinColumn(name= "verification")
+	    @JoinColumn(name= "verification_id")
 		private Verification verification;
 		
 		@ManyToOne
