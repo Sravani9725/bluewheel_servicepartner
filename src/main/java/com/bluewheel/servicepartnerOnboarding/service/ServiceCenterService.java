@@ -6,6 +6,7 @@ import com.bluewheel.servicepartnerOnboarding.vo.CommonVO;
 import com.bluewheel.servicepartnerOnboarding.vo.FollowUpRepVO;
 import com.bluewheel.servicepartnerOnboarding.vo.GetServiceCenterVO;
 import com.bluewheel.servicepartnerOnboarding.vo.PhotographyVO;
+import com.bluewheel.servicepartnerOnboarding.vo.RetrunResponseVO;
 import com.bluewheel.servicepartnerOnboarding.vo.ServiceCenterVO;
 import com.bluewheel.servicepartnerOnboarding.vo.VerificationVO;
 
@@ -14,17 +15,17 @@ import jakarta.validation.constraints.NotBlank;
 
 public interface ServiceCenterService {
 
-	String onBoardServiceCenter(@Valid ServiceCenterVO serviceCenter);
+	RetrunResponseVO onBoardServiceCenter(@Valid ServiceCenterVO serviceCenter);
 
-	String addVerificationDetails(@Valid VerificationVO verificationvo);
+	RetrunResponseVO addVerificationDetails(@Valid VerificationVO verificationvo);
 
-	String addFlexInstallationDetails(@Valid CommonVO flexvo);
+	RetrunResponseVO addFlexInstallationDetails(@Valid CommonVO flexvo);
 
-	String addPhotographyDetails( @Valid CommonVO phVO);
+	RetrunResponseVO addPhotographyDetails( @Valid CommonVO phVO);
 
-	String addTrainingDetails(@Valid CommonVO phVO);
+	RetrunResponseVO addTrainingDetails(@Valid CommonVO phVO);
 
-	String addOnboardDetails(@Valid CommonVO phVO);
+	RetrunResponseVO addOnboardDetails(@Valid CommonVO phVO);
 
 	GetServiceCenterVO getServiceCenter(@NotBlank(message = "phonenumber cannot be null") String phoneNumber);
 

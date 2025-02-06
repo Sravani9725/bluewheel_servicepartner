@@ -35,6 +35,7 @@ import com.bluewheel.servicepartnerOnboarding.vo.FollowUpRepVO;
 import com.bluewheel.servicepartnerOnboarding.vo.FollowUpVO;
 import com.bluewheel.servicepartnerOnboarding.vo.GetServiceCenterVO;
 import com.bluewheel.servicepartnerOnboarding.vo.PhotographyVO;
+import com.bluewheel.servicepartnerOnboarding.vo.RetrunResponseVO;
 import com.bluewheel.servicepartnerOnboarding.vo.ServiceCenterVO;
 import com.bluewheel.servicepartnerOnboarding.vo.VerificationVO;
 
@@ -70,7 +71,7 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 	private final TrainingRepository trainingRepo;
 	private final OnboardRepositoty onBoardRepo;
 
-	public String onBoardServiceCenter(@Valid ServiceCenterVO serviceCenter) {
+	public RetrunResponseVO onBoardServiceCenter(@Valid ServiceCenterVO serviceCenter) {
 		// Fetch existing service center by phone number
 		ServiceCenter center = servicecenterRepo.findByServiceCenterPhoneNumber(serviceCenter.getPhoneNumber());
 
@@ -157,13 +158,13 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 		center.setUpdatedAt(Timestamp.from(Instant.now()));
 
 		// Save the service center
-		servicecenterRepo.save(center);
+		center = servicecenterRepo.save(center);
 
-		return "Service center details uploaded successfully";
+		return RetrunResponseVO.builder().id(center.getId()).build();
 	}
 
 	@Override
-	public String addVerificationDetails(@Valid VerificationVO verificationvo) {
+	public RetrunResponseVO addVerificationDetails(@Valid VerificationVO verificationvo) {
 		ServiceCenter center = servicecenterRepo.findByServiceCenterPhoneNumber(verificationvo.getPhoneNumber());
 
 		if (center == null) {
@@ -224,9 +225,9 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 					verification != null ? verification.getFollowupDate() : null));
 		}
 
-		verificationRepo.save(verification);
+		verification =verificationRepo.save(verification);
 
-		return "Verification details added/updated for the service center";
+		return RetrunResponseVO.builder().id(verification.getId()).build();
 	}
 
 	private void validateVerificationDetails(VerificationVO verificationvo) {
@@ -256,7 +257,7 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 	}
 
 	@Override
-	public String addFlexInstallationDetails(@Valid CommonVO flexvo) {
+	public RetrunResponseVO addFlexInstallationDetails(@Valid CommonVO flexvo) {
 		ServiceCenter center = servicecenterRepo.findByServiceCenterPhoneNumber(flexvo.getPhoneNumber());
 
 		if (center == null) {
@@ -302,9 +303,9 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 					getOrDefault(flexvo.getFollowup().getFollowUpDate(), flex != null ? flex.getFollowupDate() : null));
 		}
 
-		flexRepo.save(flex);
+		flex = flexRepo.save(flex);
 
-		return "Flex details added/updated for a service center";
+		return RetrunResponseVO.builder().id(flex.getId()).build();
 
 	}
 
@@ -330,7 +331,7 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 	}
 
 	@Override
-	public String addPhotographyDetails(@Valid CommonVO phVO) {
+	public RetrunResponseVO addPhotographyDetails(@Valid CommonVO phVO) {
 		ServiceCenter center = servicecenterRepo.findByServiceCenterPhoneNumber(phVO.getPhoneNumber());
 
 		if (center == null) {
@@ -373,8 +374,8 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 			photo.setFollowupDate(
 					getOrDefault(phVO.getFollowup().getFollowUpDate(), photo != null ? photo.getFollowupDate() : null));
 		}
-		phRepo.save(photo);
-		return "Photography details added/updated for a service center";
+		photo = phRepo.save(photo);
+		return RetrunResponseVO.builder().id(photo.getId()).build();
 	}
 
 	private void additionalValidations(@Valid CommonVO phVO) {
@@ -393,7 +394,7 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 	}
 
 	@Override
-	public String addTrainingDetails(@Valid CommonVO phVO) {
+	public RetrunResponseVO addTrainingDetails(@Valid CommonVO phVO) {
 		ServiceCenter center = servicecenterRepo.findByServiceCenterPhoneNumber(phVO.getPhoneNumber());
 
 		if (center == null) {
@@ -435,12 +436,12 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 			photo.setFollowupDate(
 					getOrDefault(phVO.getFollowup().getFollowUpDate(), photo != null ? photo.getFollowupDate() : null));
 		}
-		trainingRepo.save(photo);
-		return "Training details added/updated for a service center";
+		photo = trainingRepo.save(photo);
+		return RetrunResponseVO.builder().id(photo.getId()).build();
 	}
 
 	@Override
-	public String addOnboardDetails(@Valid CommonVO phVO) {
+	public RetrunResponseVO addOnboardDetails(@Valid CommonVO phVO) {
 		ServiceCenter center = servicecenterRepo.findByServiceCenterPhoneNumber(phVO.getPhoneNumber());
 
 		if (center == null) {
@@ -483,8 +484,8 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 			photo.setFollowupDate(
 					getOrDefault(phVO.getFollowup().getFollowUpDate(), photo != null ? photo.getFollowupDate() : null));
 		}
-		onBoardRepo.save(photo);
-		return "Onboard details added/updated for a service center";
+		photo = onBoardRepo.save(photo);
+		return RetrunResponseVO.builder().id(photo.getId()).build();
 	}
 
 	@Override
