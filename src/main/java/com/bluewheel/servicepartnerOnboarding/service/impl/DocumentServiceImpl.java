@@ -16,6 +16,7 @@ import com.bluewheel.servicepartnerOnboarding.entity.Documents;
 import com.bluewheel.servicepartnerOnboarding.entity.Flex;
 import com.bluewheel.servicepartnerOnboarding.entity.Onboard;
 import com.bluewheel.servicepartnerOnboarding.entity.ServiceCenter;
+import com.bluewheel.servicepartnerOnboarding.entity.Training;
 import com.bluewheel.servicepartnerOnboarding.entity.Verification;
 import com.bluewheel.servicepartnerOnboarding.enums.DocumentCategoryEnum;
 import com.bluewheel.servicepartnerOnboarding.exception.BluewheelBusinessException;
@@ -23,6 +24,7 @@ import com.bluewheel.servicepartnerOnboarding.repository.DocumentsRepository;
 import com.bluewheel.servicepartnerOnboarding.repository.FlexRepository;
 import com.bluewheel.servicepartnerOnboarding.repository.OnboardRepositoty;
 import com.bluewheel.servicepartnerOnboarding.repository.ServiceCenterRepository;
+import com.bluewheel.servicepartnerOnboarding.repository.TrainingRepository;
 import com.bluewheel.servicepartnerOnboarding.repository.VerificationRepository;
 import com.bluewheel.servicepartnerOnboarding.service.DigitalOceanSpaceService;
 import com.bluewheel.servicepartnerOnboarding.service.DocumentService;
@@ -44,6 +46,7 @@ public class DocumentServiceImpl implements DocumentService {
 	private final OnboardRepositoty onboardRepo;
 	private final DigitalOceanSpaceService spaceServive;
 	private final DocumentsRepository docRepo;
+	private final TrainingRepository trainingRepo;
 
 	@Override
 	public Integer uploadDocument(@Valid MultipartFile documentvo, String docCategory, Integer id) {
@@ -76,6 +79,13 @@ public class DocumentServiceImpl implements DocumentService {
 				throw new BluewheelBusinessException("Onboarding details not found with give id", HttpStatus.NOT_FOUND,
 						"INVALID.DATA");
 			doc.setVerification(verification.get());
+			break;
+		case TRAINING:
+			Optional<Training> training = trainingRepo.findById(id);
+			if (training.isEmpty())
+				throw new BluewheelBusinessException("Onboarding details not found with give id", HttpStatus.NOT_FOUND,
+						"INVALID.DATA");
+			doc.setTraining(training.get());
 			break;
 
 		}
@@ -149,6 +159,14 @@ public class DocumentServiceImpl implements DocumentService {
 				throw new BluewheelBusinessException("Onboarding details not found with give id", HttpStatus.NOT_FOUND,
 						"INVALID.DATA");
 			docList = docRepo.findByVerification(verification.get());
+			break;
+			
+		case TRAINING:
+			Optional<Training> training = trainingRepo.findById(id);
+			if (training.isEmpty())
+				throw new BluewheelBusinessException("Onboarding details not found with give id", HttpStatus.NOT_FOUND,
+						"INVALID.DATA");
+			docList = docRepo.findByTraining(training.get());
 			break;
 
 		}
