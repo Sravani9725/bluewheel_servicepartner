@@ -8,6 +8,7 @@ import com.bluewheel.servicepartnerOnboarding.entity.Documents;
 import com.bluewheel.servicepartnerOnboarding.entity.Flex;
 import com.bluewheel.servicepartnerOnboarding.entity.Onboard;
 import com.bluewheel.servicepartnerOnboarding.entity.ServiceCenter;
+import com.bluewheel.servicepartnerOnboarding.entity.Training;
 import com.bluewheel.servicepartnerOnboarding.entity.Verification;
 
 public interface DocumentsRepository extends JpaRepository<Documents, Integer> {
@@ -19,5 +20,7 @@ public interface DocumentsRepository extends JpaRepository<Documents, Integer> {
 	List<Documents> findByOnboard(Onboard onboard);
 
 	List<Documents> findByVerification(Verification verification);
+
+	List<Documents> findByTraining(Training training);
 
 }

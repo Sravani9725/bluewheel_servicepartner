@@ -54,6 +54,10 @@ public class Documents implements Serializable{
 		private Verification verification;
 		
 		@ManyToOne
+	    @JoinColumn(name= "training_id")
+		private Training training;
+		
+		@ManyToOne
 	    @JoinColumn(name= "flex_id")
 		private Flex flex;
 		@ManyToOne
