@@ -90,8 +90,8 @@ public class DocumentServiceImpl implements DocumentService {
 
 		}
 		doc.setDocCategory(docCategory);
-		doc.setFilename(documentvo.getName());
-		doc.setKey(buildKey(id, docCategory, documentvo.getName()));
+		doc.setFilename(documentvo.getOriginalFilename());
+		doc.setKey(buildKey(id, docCategory, documentvo.getOriginalFilename()));
 		spaceServive.uploadFile(doc.getKey(), documentvo);
 		doc = docRepo.save(doc);
 		return doc.getId();

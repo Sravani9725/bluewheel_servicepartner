@@ -76,7 +76,7 @@ public class DigitalOceanSpaceService {
                 .build();
 
         
-        this.s3Presigner = S3Presigner.builder().region(Region.of("blr1"))
+        this.s3Presigner = S3Presigner.builder().endpointOverride(URI.create(endpoint)).region(Region.of("blr1"))
 				.credentialsProvider(StaticCredentialsProvider.create(awsCreds))
 				.build();
     }
@@ -139,16 +139,35 @@ public class DigitalOceanSpaceService {
     }
 
     public Map<Integer, String> getPresignUrls(Map<Integer, String> s3Keys) {
-		log.debug("generating the presigned urls using s3");
-		Map<Integer,String> presignUrls = new HashMap<>();
-		s3Keys.forEach((key,val)->{
-			GetObjectRequest gor = GetObjectRequest.builder().bucket(bucketName).key(val).build();
-			GetObjectPresignRequest popr = GetObjectPresignRequest.builder().getObjectRequest(gor).signatureDuration(Duration.ofDays(2)).build();
-			PresignedGetObjectRequest pgor = s3Presigner.presignGetObject(popr);
-			presignUrls.put(key, pgor.url().toString());
-		});
-		return presignUrls;
-				
+    	log.debug("Generating the presigned URLs using S3");
+
+    	Map<Integer, String> presignUrls = new HashMap<>();
+    	s3Keys.forEach((key, val) -> {
+    	    try {
+    	        // Create a GetObjectRequest with the bucket name and object key
+    	        GetObjectRequest gor = GetObjectRequest.builder()
+    	                .bucket(bucketName)
+    	                .key(val) // Ensure that the key is correct and the object exists
+    	                .build();
+
+    	        // Generate a pre-signed URL for the object
+    	        GetObjectPresignRequest popr = GetObjectPresignRequest.builder()
+    	                .getObjectRequest(gor)
+    	                .signatureDuration(Duration.ofDays(2)) // Validity period for the URL
+    	                .build();
+
+    	        // Generate the presigned URL
+    	        PresignedGetObjectRequest pgor = s3Presigner.presignGetObject(popr);
+
+    	        // Put the generated presigned URL into the map
+    	        presignUrls.put(key, pgor.url().toString());
+
+    	        log.debug("Generated presigned URL for key {}: {}", key, pgor.url().toString());
+    	    } catch (Exception e) {
+    	        log.error("Error generating presigned URL for key {}: {}", key, e.getMessage());
+    	    }
+    	});
+    	return presignUrls;
 	}
 
     
