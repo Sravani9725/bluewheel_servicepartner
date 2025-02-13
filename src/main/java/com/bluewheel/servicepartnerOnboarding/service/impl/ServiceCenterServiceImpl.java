@@ -401,13 +401,21 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 			throw new BluewheelBusinessException("Service Center not found with provided phone number",
 					HttpStatus.NOT_FOUND, "INVALID.DATA");
 		}
-
-		if (center.getPhotography() != null
-				&& !center.getPhotography().getPhStatus().equals(StatusEnum.complete.name())) {
+		
+		if (center.getFlex() != null && !center.getFlex().getFlexInstallationStatus()
+				.equals(FlexStatusEnum.FlexInstallationcomplete.name())) {
 			throw new BluewheelBusinessException(
-					"Please complete the Photography process before proceeding with Training", HttpStatus.NOT_FOUND,
-					"INVALID.DATA");
+					"Please complete the Flex Installation process before proceeding with Training",
+					HttpStatus.NOT_FOUND, "INVALID.DATA");
 		}
+
+
+//		if (center.getPhotography() != null
+//				&& !center.getPhotography().getPhStatus().equals(StatusEnum.complete.name())) {
+//			throw new BluewheelBusinessException(
+//					"Please complete the Photography process before proceeding with Training", HttpStatus.NOT_FOUND,
+//					"INVALID.DATA");
+//		}
 		
 		additionalValidations(phVO);
 		Training photo = trainingRepo.getByServiceCenter(center);
