@@ -402,10 +402,10 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 					HttpStatus.NOT_FOUND, "INVALID.DATA");
 		}
 		
-		if (center.getFlex() != null && !center.getFlex().getFlexInstallationStatus()
-				.equals(FlexStatusEnum.FlexInstallationcomplete.name())) {
+		if (center.getVerification() != null
+				&& !center.getVerification().getVerificationStatus().equals(VerificationStatusEnum.Verified.name())) {
 			throw new BluewheelBusinessException(
-					"Please complete the Flex Installation process before proceeding with Training",
+					"Please complete the Verification process before proceeding to Training process",
 					HttpStatus.NOT_FOUND, "INVALID.DATA");
 		}
 
