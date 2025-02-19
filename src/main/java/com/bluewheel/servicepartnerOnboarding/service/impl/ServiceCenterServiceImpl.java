@@ -580,7 +580,7 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 			for (ServiceCenter c : centers) {
 				if (c.getRegistrationStatus().equals(RegistrationStatusEnum.Followup.name())
 						|| c.getRegistrationStatus().equals(RegistrationStatusEnum.Assigned.name()))
-					returnList.add(followUpRepVOMapper(c, c.getReason(), c.getFollowupDate(),c.getRegistrationStatus()));
+					returnList.add(followUpRepVOMapper(c, c.getReason(), c.getFollowupDate(),c.getRegistrationStatus(),"Registration"));
 
 			}
 			flag = true;
@@ -590,7 +590,7 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 			for (Verification v : verifications) {
 				if (v.getVerificationStatus().equals(VerificationStatusEnum.VerificationPending.name())
 						|| (v.getVerificationStatus().equals(VerificationStatusEnum.Assigned.name())))
-					returnList.add(followUpRepVOMapper(v.getServiceCenter(), v.getReason(), v.getFollowupDate(),v.getVerificationStatus()));
+					returnList.add(followUpRepVOMapper(v.getServiceCenter(), v.getReason(), v.getFollowupDate(),v.getVerificationStatus(),"Verification"));
 			}
 			flag = true;
 		}
@@ -599,7 +599,7 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 			for (Flex f : flexs) {
 				if (f.getFlexInstallationStatus().equals(FlexStatusEnum.flexInstallationPending.name())
 						|| f.getFlexInstallationStatus().equals(FlexStatusEnum.Assigned.name()))
-					returnList.add(followUpRepVOMapper(f.getServiceCenter(), f.getReason(), f.getFollowupDate(),f.getFlexInstallationStatus()));
+					returnList.add(followUpRepVOMapper(f.getServiceCenter(), f.getReason(), f.getFollowupDate(),f.getFlexInstallationStatus(),"Flex"));
 			}
 			flag = true;
 		}
@@ -608,7 +608,7 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 			for (Photography p : photos) {
 				if (p.getPhStatus().equals(StatusEnum.pending.name())
 						|| p.getPhStatus().equals(StatusEnum.Assigned.name()))
-					returnList.add(followUpRepVOMapper(p.getServiceCenter(), p.getReason(), p.getFollowupDate(),p.getPhStatus()));
+					returnList.add(followUpRepVOMapper(p.getServiceCenter(), p.getReason(), p.getFollowupDate(),p.getPhStatus(),"Photography"));
 			}
 			flag = true;
 		}
@@ -617,13 +617,13 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 			for (Training p : trainings) {
 				if (p.getTrainingStatus().equals(StatusEnum.pending.name())
 						|| p.getTrainingStatus().equals(StatusEnum.Assigned.name()))
-					returnList.add(followUpRepVOMapper(p.getServiceCenter(), p.getReason(), p.getFollowupDate(),p.getTrainingStatus()));
+					returnList.add(followUpRepVOMapper(p.getServiceCenter(), p.getReason(), p.getFollowupDate(),p.getTrainingStatus(),"Training"));
 			}
 			List<Onboard> onboards = onBoardRepo.getByTrRepId(repId);
 			for (Onboard p : onboards) {
 				if (p.getOnboardStatus().equals(StatusEnum.pending.name())
 						|| p.getOnboardStatus().equals(StatusEnum.Assigned.name()))
-					returnList.add(followUpRepVOMapper(p.getServiceCenter(), p.getReason(), p.getFollowupDate(),p.getOnboardStatus()));
+					returnList.add(followUpRepVOMapper(p.getServiceCenter(), p.getReason(), p.getFollowupDate(),p.getOnboardStatus(),"Onboard"));
 			}
 			flag = true;
 		}
@@ -632,10 +632,10 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 		return returnList;
 	}
 
-	public FollowUpRepVO followUpRepVOMapper(ServiceCenter center, String reason, LocalDate date,String status) {
+	public FollowUpRepVO followUpRepVOMapper(ServiceCenter center, String reason, LocalDate date,String status, String category) {
 		return FollowUpRepVO.builder().serviceCenterPhonenumber(center.getServiceCenterPhoneNumber())
 				.serviceCenterName(center.getServiceCenterName()).serviceCenterAddress(center.getServiceCenterAddress())
-				.serviceCenterOwnerName(center.getServiceCenterOwnerName()).status(status)
+				.serviceCenterOwnerName(center.getServiceCenterOwnerName()).status(status).category(category)
 				.latitude(center.getLatitude()).longitude(center.getLongitude())
 				.followUpDetails(buildFollowup(reason, date))
 				.build();
