@@ -21,5 +21,6 @@ public class FollowUpRepVO {
 	private Double longitude;
 	private String status;
 	private FollowUpVO followUpDetails;
+	private String category;
 
 }
