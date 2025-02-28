@@ -339,10 +339,16 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 					HttpStatus.NOT_FOUND, "INVALID.DATA");
 		}
 
-		if (center.getFlex() != null && !center.getFlex().getFlexInstallationStatus()
-				.equals(FlexStatusEnum.FlexInstallationcomplete.name())) {
+//		if (center.getFlex() != null && !center.getFlex().getFlexInstallationStatus()
+//				.equals(FlexStatusEnum.FlexInstallationcomplete.name())) {
+//			throw new BluewheelBusinessException(
+//					"Please complete the Flex Installation process before proceeding with photography",
+//					HttpStatus.NOT_FOUND, "INVALID.DATA");
+//		}
+		if (center.getVerification() != null
+				&& !center.getVerification().getVerificationStatus().equals(VerificationStatusEnum.Verified.name())) {
 			throw new BluewheelBusinessException(
-					"Please complete the Flex Installation process before proceeding with photography",
+					"Please complete the Verification process before proceeding to Training process",
 					HttpStatus.NOT_FOUND, "INVALID.DATA");
 		}
 		additionalValidations(phVO);
@@ -457,14 +463,20 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 					HttpStatus.NOT_FOUND, "INVALID.DATA");
 		}
 
-		if (center.getTraining() != null
-				&& !center.getTraining().getTrainingStatus().equals(StatusEnum.complete.name())) {
-			throw new BluewheelBusinessException("Please complete the Training and then proceed to on boarding.",
-					HttpStatus.NOT_FOUND, "INVALID.DATA");
-		}
+//		if (center.getTraining() != null
+//				&& !center.getTraining().getTrainingStatus().equals(StatusEnum.complete.name())) {
+//			throw new BluewheelBusinessException("Please complete the Training and then proceed to on boarding.",
+//					HttpStatus.NOT_FOUND, "INVALID.DATA");
+//		}
 		if (center.getTraining() != null && !center.getTraining().getTrRepId().equals(phVO.getRepId())) {
 			throw new BluewheelBusinessException("rep id should match with rep id of training", HttpStatus.NOT_FOUND,
 					"INVALID.DATA");
+		}
+		if (center.getVerification() != null
+				&& !center.getVerification().getVerificationStatus().equals(VerificationStatusEnum.Verified.name())) {
+			throw new BluewheelBusinessException(
+					"Please complete the Verification process before proceeding to Training process",
+					HttpStatus.NOT_FOUND, "INVALID.DATA");
 		}
 		additionalValidations(phVO);
 		Onboard photo = onBoardRepo.getByServiceCenter(center);
