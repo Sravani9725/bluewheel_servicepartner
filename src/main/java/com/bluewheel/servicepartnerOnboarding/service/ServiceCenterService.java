@@ -6,6 +6,7 @@ import com.bluewheel.servicepartnerOnboarding.vo.CommonVO;
 import com.bluewheel.servicepartnerOnboarding.vo.FollowUpRepVO;
 import com.bluewheel.servicepartnerOnboarding.vo.GetServiceCenterVO;
 import com.bluewheel.servicepartnerOnboarding.vo.PhotographyVO;
+import com.bluewheel.servicepartnerOnboarding.vo.ReAssignVO;
 import com.bluewheel.servicepartnerOnboarding.vo.RetrunResponseVO;
 import com.bluewheel.servicepartnerOnboarding.vo.ServiceCenterVO;
 import com.bluewheel.servicepartnerOnboarding.vo.VerificationVO;
@@ -30,5 +31,7 @@ public interface ServiceCenterService {
 	GetServiceCenterVO getServiceCenter(@NotBlank(message = "phonenumber cannot be null") String phoneNumber);
 
 	List<FollowUpRepVO> getFollowupsByRepId(@NotBlank(message = "rep id cannot be null") String repId);
+
+	String reAssignDetails(@Valid ReAssignVO phVO);
 
 }

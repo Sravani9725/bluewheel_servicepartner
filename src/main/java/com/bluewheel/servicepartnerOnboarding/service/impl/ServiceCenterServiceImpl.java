@@ -18,6 +18,7 @@ import com.bluewheel.servicepartnerOnboarding.entity.Photography;
 import com.bluewheel.servicepartnerOnboarding.entity.ServiceCenter;
 import com.bluewheel.servicepartnerOnboarding.entity.Training;
 import com.bluewheel.servicepartnerOnboarding.entity.Verification;
+import com.bluewheel.servicepartnerOnboarding.enums.DocumentCategoryEnum;
 import com.bluewheel.servicepartnerOnboarding.enums.FlexStatusEnum;
 import com.bluewheel.servicepartnerOnboarding.enums.StatusEnum;
 import com.bluewheel.servicepartnerOnboarding.enums.RegistrationStatusEnum;
@@ -35,6 +36,7 @@ import com.bluewheel.servicepartnerOnboarding.vo.FollowUpRepVO;
 import com.bluewheel.servicepartnerOnboarding.vo.FollowUpVO;
 import com.bluewheel.servicepartnerOnboarding.vo.GetServiceCenterVO;
 import com.bluewheel.servicepartnerOnboarding.vo.PhotographyVO;
+import com.bluewheel.servicepartnerOnboarding.vo.ReAssignVO;
 import com.bluewheel.servicepartnerOnboarding.vo.RetrunResponseVO;
 import com.bluewheel.servicepartnerOnboarding.vo.ServiceCenterVO;
 import com.bluewheel.servicepartnerOnboarding.vo.VerificationVO;
@@ -78,7 +80,7 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 		// Validate Sales Rep Id
 		if (!onBoardSalesReps.contains(serviceCenter.getSalesRepId())) {
 			throw new BluewheelBusinessException(
-					"Sales Rep Id does not match with existing sales rep ids for onboarding a service center",
+					"Sales Rep Id does not match with existing sales rep ids for registering a service center",
 					HttpStatus.EXPECTATION_FAILED, "INVALID.DATA");
 		}
 
@@ -651,6 +653,79 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 				.latitude(center.getLatitude()).longitude(center.getLongitude())
 				.followUpDetails(buildFollowup(reason, date))
 				.build();
+	}
+
+	@Override
+	public String reAssignDetails(@Valid ReAssignVO phVO) {
+		ServiceCenter center = servicecenterRepo.findByServiceCenterPhoneNumber(phVO.getPhoneNumber());
+		if (center == null) {
+			throw new BluewheelBusinessException("Service Center not found with provided phone number",
+					HttpStatus.NOT_FOUND, "INVALID.DATA");
+		}
+		switch(DocumentCategoryEnum.valueOf(phVO.getCategoryType())){
+			case REGISTRATION:
+				if (!onBoardSalesReps.contains(phVO.getRepId())) {
+					throw new BluewheelBusinessException(
+							"Sales Rep Id does not match with existing sales rep ids for registering a service center",
+							HttpStatus.EXPECTATION_FAILED, "INVALID.DATA");
+				}
+				if(center.getRegistrationStatus().equals(RegistrationStatusEnum.Registered.name()))
+					throw new BluewheelBusinessException("Registration Completed, reassignment not possible",HttpStatus.BAD_REQUEST,"INVALID.DATA");
+				center.setSalesRepId(phVO.getRepId());
+				break;
+			case FLEX_INSTALLATION:
+				if ( !flexSalesRep.contains(phVO.getRepId())) {
+					throw new BluewheelBusinessException("Flex Rep Id does not match with existing flex rep ids",
+							HttpStatus.BAD_REQUEST, "INVALID.DATA");
+				}
+				if(center.getFlex().getFlexInstallationStatus().equals(FlexStatusEnum.FlexInstallationcomplete.name()))
+					throw new BluewheelBusinessException("Flex Installation Completed, reassignment not possible",HttpStatus.BAD_REQUEST,"INVALID.DATA");
+
+				center.getFlex().setFlexRepId(phVO.getRepId());
+				break;
+			case VERIFICATION:
+				if ( !verifierSalesRep.contains(phVO.getRepId())) {
+					throw new BluewheelBusinessException(
+							"Verifier Rep Id does not match with existing verifier rep ids for verifying a service center",
+							HttpStatus.BAD_REQUEST, "INVALID.DATA");
+				}
+				if(center.getVerification().getVerificationStatus().equals(VerificationStatusEnum.Verified.name()))
+					throw new BluewheelBusinessException("Verification Completed, reassignment not possible",HttpStatus.BAD_REQUEST,"INVALID.DATA");
+				center.getVerification().setVerifierRepId(phVO.getRepId());
+				break;
+			case PHOTOGRAPHY:
+				if ( !phSalesRep.contains(phVO.getRepId())) {
+					throw new BluewheelBusinessException("Photography Rep Id does not match with existing photography rep ids",
+							HttpStatus.BAD_REQUEST, "INVALID.DATA");
+				}
+				if(center.getPhotography().getPhStatus().equals(StatusEnum.complete.name()))
+					throw new BluewheelBusinessException("Photography Completed, reassignment not possible",HttpStatus.BAD_REQUEST,"INVALID.DATA");
+				center.getPhotography().setPhRepId(phVO.getRepId());
+				break;
+			case TRAINING:
+				if ( !tainingAndOnboardSalesRep.contains(phVO.getRepId())) {
+					throw new BluewheelBusinessException("Training Rep Id does not match with existing training rep ids",
+							HttpStatus.BAD_REQUEST, "INVALID.DATA");
+				}
+				if(center.getTraining().getTrainingStatus().equals(StatusEnum.complete.name()))
+					throw new BluewheelBusinessException("Training Completed, reassignment not possible",HttpStatus.BAD_REQUEST,"INVALID.DATA");
+				center.getTraining().setTrRepId(phVO.getRepId());
+				break;
+			case ONBOARDING:
+				if (!tainingAndOnboardSalesRep.contains(phVO.getRepId())) {
+					throw new BluewheelBusinessException("Training Rep Id does not match with existing training rep ids",
+							HttpStatus.BAD_REQUEST, "INVALID.DATA");
+				}
+				if(center.getOnboard().getOnboardStatus().equals(StatusEnum.complete.name()))
+					throw new BluewheelBusinessException("Onboarding Completed, reassignment not possible",HttpStatus.BAD_REQUEST,"INVALID.DATA");
+
+				center.getOnboard().setTrRepId(phVO.getRepId());
+				break;
+			
+				
+		}
+		servicecenterRepo.save(center);
+		return "ReAssigned successfully";
 	}
 
 }

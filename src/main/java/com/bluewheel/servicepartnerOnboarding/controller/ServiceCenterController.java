@@ -4,8 +4,10 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,6 +15,7 @@ import com.bluewheel.servicepartnerOnboarding.vo.CommonVO;
 import com.bluewheel.servicepartnerOnboarding.vo.FollowUpRepVO;
 import com.bluewheel.servicepartnerOnboarding.vo.GetServiceCenterVO;
 import com.bluewheel.servicepartnerOnboarding.vo.PhotographyVO;
+import com.bluewheel.servicepartnerOnboarding.vo.ReAssignVO;
 import com.bluewheel.servicepartnerOnboarding.vo.RetrunResponseVO;
 import com.bluewheel.servicepartnerOnboarding.service.ServiceCenterService;
 import com.bluewheel.servicepartnerOnboarding.vo.ServiceCenterVO;
@@ -102,7 +105,14 @@ public class ServiceCenterController {
 
 	}
 	
-	
+	@PatchMapping("/service-center/reassign")
+	public ResponseEntity<String> addOnboardingetails(@RequestBody @Valid ReAssignVO phVO) {
+		log.info("Request received to add a service center");
+		String basevo = serviceCenterService.reAssignDetails(phVO);
+//		log.info(basevo);
+		return ResponseEntity.ok().body(basevo);
+
+	}
 	
 	
 

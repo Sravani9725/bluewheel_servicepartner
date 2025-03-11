@@ -6,6 +6,7 @@ public enum DocumentCategoryEnum {
 	FLEX_INSTALLATION,
 	ONBOARDING,
 	VERIFICATION,
-	TRAINING
+	TRAINING,
+	PHOTOGRAPHY
 
 }
