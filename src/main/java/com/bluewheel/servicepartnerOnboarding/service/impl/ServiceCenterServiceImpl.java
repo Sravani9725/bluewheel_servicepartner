@@ -118,8 +118,10 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 			throw new BluewheelBusinessException("Sales Rep Id mismatch error message", HttpStatus.BAD_REQUEST,
 					"INVALID.DATA");
 		}
-		if(center !=null && center.getRegistrationStatus().equals(RegistrationStatusEnum.Registered.name()) && serviceCenter.getRegistrationStatus()!=null) {
-			throw new BluewheelBusinessException("Service center registration completed, cannot update status",HttpStatus.BAD_REQUEST,"INVALID>REQUEST");
+		if (center != null && center.getRegistrationStatus().equals(RegistrationStatusEnum.Registered.name())
+				&& serviceCenter.getRegistrationStatus() != null) {
+			throw new BluewheelBusinessException("Service center registration completed, cannot update status",
+					HttpStatus.BAD_REQUEST, "INVALID>REQUEST");
 		}
 
 		// Create a new ServiceCenter if center is null (onboarding a new service
@@ -185,9 +187,11 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 		if (verification != null && !verification.getVerifierRepId().equals(verificationvo.getVerifierRepId())) {
 			throw new BluewheelBusinessException("Verifier Rep Id mismatch", HttpStatus.BAD_REQUEST, "INVALID.DATA");
 		}
-		
-		if(verification!=null && verification.getVerificationStatus().equals(VerificationStatusEnum.Verified.name()) && verificationvo.getVerificationStatus()!=null)
-			throw new BluewheelBusinessException("Verification completed, cannot change status again",HttpStatus.BAD_REQUEST,"INVALID_REQUEST");
+
+		if (verification != null && verification.getVerificationStatus().equals(VerificationStatusEnum.Verified.name())
+				&& verificationvo.getVerificationStatus() != null)
+			throw new BluewheelBusinessException("Verification completed, cannot change status again",
+					HttpStatus.BAD_REQUEST, "INVALID_REQUEST");
 
 		if (verification == null && !verifierSalesRep.contains(verificationvo.getVerifierRepId())) {
 			throw new BluewheelBusinessException(
@@ -227,7 +231,7 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 					verification != null ? verification.getFollowupDate() : null));
 		}
 
-		verification =verificationRepo.save(verification);
+		verification = verificationRepo.save(verification);
 
 		return RetrunResponseVO.builder().id(verification.getId()).build();
 	}
@@ -282,9 +286,11 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 			throw new BluewheelBusinessException("Flex Rep Id does not match with existing flex rep ids",
 					HttpStatus.BAD_REQUEST, "INVALID.DATA");
 		}
-		
-		if(flex != null && flex.getFlexInstallationStatus().equals(FlexStatusEnum.FlexInstallationcomplete.name()) && flexvo.getStatus()!=null) {
-			throw new BluewheelBusinessException("Flex Installation completed, cannot update status",HttpStatus.BAD_REQUEST,"INVALID_REQUEST");
+
+		if (flex != null && flex.getFlexInstallationStatus().equals(FlexStatusEnum.FlexInstallationcomplete.name())
+				&& flexvo.getStatus() != null) {
+			throw new BluewheelBusinessException("Flex Installation completed, cannot update status",
+					HttpStatus.BAD_REQUEST, "INVALID_REQUEST");
 		}
 		additionalFlexValidations(flexvo);
 		if (flex == null) {
@@ -363,7 +369,7 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 			throw new BluewheelBusinessException("Photography Rep Id does not match with existing photography rep ids",
 					HttpStatus.BAD_REQUEST, "INVALID.DATA");
 		}
-		if (photo != null && photo.getPhStatus().equals(StatusEnum.complete.name())&& phVO.getStatus()!=null) {
+		if (photo != null && photo.getPhStatus().equals(StatusEnum.complete.name()) && phVO.getStatus() != null) {
 			throw new BluewheelBusinessException("Photography already completed,cannot update status",
 					HttpStatus.BAD_REQUEST, "INVALID.DATA");
 		}
@@ -409,7 +415,7 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 			throw new BluewheelBusinessException("Service Center not found with provided phone number",
 					HttpStatus.NOT_FOUND, "INVALID.DATA");
 		}
-		
+
 		if (center.getVerification() != null
 				&& !center.getVerification().getVerificationStatus().equals(VerificationStatusEnum.Verified.name())) {
 			throw new BluewheelBusinessException(
@@ -417,17 +423,16 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 					HttpStatus.NOT_FOUND, "INVALID.DATA");
 		}
 
-
 //		if (center.getPhotography() != null
 //				&& !center.getPhotography().getPhStatus().equals(StatusEnum.complete.name())) {
 //			throw new BluewheelBusinessException(
 //					"Please complete the Photography process before proceeding with Training", HttpStatus.NOT_FOUND,
 //					"INVALID.DATA");
 //		}
-		
+
 		additionalValidations(phVO);
 		Training photo = trainingRepo.getByServiceCenter(center);
-		
+
 		if (photo != null && !photo.getTrRepId().equals(phVO.getRepId())) {
 			throw new BluewheelBusinessException("Trainer Rep Id mismatch", HttpStatus.BAD_REQUEST, "INVALID.DATA");
 		}
@@ -436,8 +441,9 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 			throw new BluewheelBusinessException("Training Rep Id does not match with existing training rep ids",
 					HttpStatus.BAD_REQUEST, "INVALID.DATA");
 		}
-		if(photo !=null && photo.getTrainingStatus().equals(StatusEnum.complete.name())&& phVO.getStatus()!=null)
-			throw new BluewheelBusinessException("Traning completed, cannot update status",HttpStatus.BAD_REQUEST,"INVALID_REQUEST");
+		if (photo != null && photo.getTrainingStatus().equals(StatusEnum.complete.name()) && phVO.getStatus() != null)
+			throw new BluewheelBusinessException("Traning completed, cannot update status", HttpStatus.BAD_REQUEST,
+					"INVALID_REQUEST");
 		if (photo == null) {
 			photo = new Training();
 			photo.setCreatedAt(Timestamp.from(Instant.now()));
@@ -490,8 +496,9 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 			throw new BluewheelBusinessException("Onboard Rep Id does not match with existing Onboard rep ids",
 					HttpStatus.BAD_REQUEST, "INVALID.DATA");
 		}
-		if(photo !=null && photo.getOnboardStatus().equals(StatusEnum.complete.name())&& phVO.getStatus()!=null)
-			throw new BluewheelBusinessException("Onboarding completed, cannot update status",HttpStatus.BAD_REQUEST,"INVALID_REQUEST");
+		if (photo != null && photo.getOnboardStatus().equals(StatusEnum.complete.name()) && phVO.getStatus() != null)
+			throw new BluewheelBusinessException("Onboarding completed, cannot update status", HttpStatus.BAD_REQUEST,
+					"INVALID_REQUEST");
 		if (photo == null) {
 			photo = new Onboard();
 			photo.setCreatedAt(Timestamp.from(Instant.now()));
@@ -521,9 +528,8 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 				.registeredDate(center.getRegisteredDate()).registrationComments(center.getComments())
 				.serviceCenterAddress(center.getServiceCenterAddress()).serviceCenterName(center.getServiceCenterName())
 				.phoneNumber(center.getServiceCenterPhoneNumber()).registrationStatus(center.getRegistrationStatus())
-				.serviceCenterOwnerName(center.getServiceCenterOwnerName())
-				.latitude(center.getLatitude()).longitude(center.getLongitude())
-				.subscriptionType(center.getSubscriptionType())
+				.serviceCenterOwnerName(center.getServiceCenterOwnerName()).latitude(center.getLatitude())
+				.longitude(center.getLongitude()).subscriptionType(center.getSubscriptionType())
 				.registrationFollowup(buildFollowup(center.getReason(), center.getFollowupDate()))
 				.verificationDetails(getVerifierVO(center.getVerification())).flexDetails(getFlexVO(center.getFlex()))
 				.photographyDetails(getPhotographyVO(center.getPhotography()))
@@ -553,8 +559,8 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 	private CommonVO getPhotographyVO(Photography photography) {
 		if (photography == null)
 			return null;
-		return CommonVO.builder().id(photography.getId()).comments(photography.getComments()).repId(photography.getPhRepId())
-				.status(photography.getPhStatus()).phDate(photography.getPhDate())
+		return CommonVO.builder().id(photography.getId()).comments(photography.getComments())
+				.repId(photography.getPhRepId()).status(photography.getPhStatus()).phDate(photography.getPhDate())
 				.followup(buildFollowup(photography.getReason(), photography.getFollowupDate())).build();
 	}
 
@@ -594,7 +600,8 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 			for (ServiceCenter c : centers) {
 				if (c.getRegistrationStatus().equals(RegistrationStatusEnum.Followup.name())
 						|| c.getRegistrationStatus().equals(RegistrationStatusEnum.Assigned.name()))
-					returnList.add(followUpRepVOMapper(c, c.getReason(), c.getFollowupDate(),c.getRegistrationStatus(),"Registration"));
+					returnList.add(followUpRepVOMapper(c, c.getReason(), c.getFollowupDate(), c.getRegistrationStatus(),
+							"Registration"));
 
 			}
 			flag = true;
@@ -604,7 +611,8 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 			for (Verification v : verifications) {
 				if (v.getVerificationStatus().equals(VerificationStatusEnum.VerificationPending.name())
 						|| (v.getVerificationStatus().equals(VerificationStatusEnum.Assigned.name())))
-					returnList.add(followUpRepVOMapper(v.getServiceCenter(), v.getReason(), v.getFollowupDate(),v.getVerificationStatus(),"Verification"));
+					returnList.add(followUpRepVOMapper(v.getServiceCenter(), v.getReason(), v.getFollowupDate(),
+							v.getVerificationStatus(), "Verification"));
 			}
 			flag = true;
 		}
@@ -613,7 +621,8 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 			for (Flex f : flexs) {
 				if (f.getFlexInstallationStatus().equals(FlexStatusEnum.flexInstallationPending.name())
 						|| f.getFlexInstallationStatus().equals(FlexStatusEnum.Assigned.name()))
-					returnList.add(followUpRepVOMapper(f.getServiceCenter(), f.getReason(), f.getFollowupDate(),f.getFlexInstallationStatus(),"Flex"));
+					returnList.add(followUpRepVOMapper(f.getServiceCenter(), f.getReason(), f.getFollowupDate(),
+							f.getFlexInstallationStatus(), "Flex"));
 			}
 			flag = true;
 		}
@@ -622,7 +631,8 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 			for (Photography p : photos) {
 				if (p.getPhStatus().equals(StatusEnum.pending.name())
 						|| p.getPhStatus().equals(StatusEnum.Assigned.name()))
-					returnList.add(followUpRepVOMapper(p.getServiceCenter(), p.getReason(), p.getFollowupDate(),p.getPhStatus(),"Photography"));
+					returnList.add(followUpRepVOMapper(p.getServiceCenter(), p.getReason(), p.getFollowupDate(),
+							p.getPhStatus(), "Photography"));
 			}
 			flag = true;
 		}
@@ -631,13 +641,15 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 			for (Training p : trainings) {
 				if (p.getTrainingStatus().equals(StatusEnum.pending.name())
 						|| p.getTrainingStatus().equals(StatusEnum.Assigned.name()))
-					returnList.add(followUpRepVOMapper(p.getServiceCenter(), p.getReason(), p.getFollowupDate(),p.getTrainingStatus(),"Training"));
+					returnList.add(followUpRepVOMapper(p.getServiceCenter(), p.getReason(), p.getFollowupDate(),
+							p.getTrainingStatus(), "Training"));
 			}
 			List<Onboard> onboards = onBoardRepo.getByTrRepId(repId);
 			for (Onboard p : onboards) {
 				if (p.getOnboardStatus().equals(StatusEnum.pending.name())
 						|| p.getOnboardStatus().equals(StatusEnum.Assigned.name()))
-					returnList.add(followUpRepVOMapper(p.getServiceCenter(), p.getReason(), p.getFollowupDate(),p.getOnboardStatus(),"Onboard"));
+					returnList.add(followUpRepVOMapper(p.getServiceCenter(), p.getReason(), p.getFollowupDate(),
+							p.getOnboardStatus(), "Onboard"));
 			}
 			flag = true;
 		}
@@ -646,13 +658,13 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 		return returnList;
 	}
 
-	public FollowUpRepVO followUpRepVOMapper(ServiceCenter center, String reason, LocalDate date,String status, String category) {
+	public FollowUpRepVO followUpRepVOMapper(ServiceCenter center, String reason, LocalDate date, String status,
+			String category) {
 		return FollowUpRepVO.builder().serviceCenterPhonenumber(center.getServiceCenterPhoneNumber())
 				.serviceCenterName(center.getServiceCenterName()).serviceCenterAddress(center.getServiceCenterAddress())
 				.serviceCenterOwnerName(center.getServiceCenterOwnerName()).status(status).category(category)
 				.latitude(center.getLatitude()).longitude(center.getLongitude())
-				.followUpDetails(buildFollowup(reason, date))
-				.build();
+				.followUpDetails(buildFollowup(reason, date)).build();
 	}
 
 	@Override
@@ -662,67 +674,97 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 			throw new BluewheelBusinessException("Service Center not found with provided phone number",
 					HttpStatus.NOT_FOUND, "INVALID.DATA");
 		}
-		switch(DocumentCategoryEnum.valueOf(phVO.getCategoryType())){
-			case REGISTRATION:
-				if (!onBoardSalesReps.contains(phVO.getRepId())) {
-					throw new BluewheelBusinessException(
-							"Sales Rep Id does not match with existing sales rep ids for registering a service center",
-							HttpStatus.EXPECTATION_FAILED, "INVALID.DATA");
-				}
-				if(center.getRegistrationStatus().equals(RegistrationStatusEnum.Registered.name()))
-					throw new BluewheelBusinessException("Registration Completed, reassignment not possible",HttpStatus.BAD_REQUEST,"INVALID.DATA");
-				center.setSalesRepId(phVO.getRepId());
-				break;
-			case FLEX_INSTALLATION:
-				if ( !flexSalesRep.contains(phVO.getRepId())) {
+		switch (DocumentCategoryEnum.valueOf(phVO.getCategoryType())) {
+		case REGISTRATION:
+			if (!onBoardSalesReps.contains(phVO.getRepId())) {
+				throw new BluewheelBusinessException(
+						"Sales Rep Id does not match with existing sales rep ids for registering a service center",
+						HttpStatus.EXPECTATION_FAILED, "INVALID.DATA");
+			}
+			if (center.getRegistrationStatus().equals(RegistrationStatusEnum.Registered.name()))
+				throw new BluewheelBusinessException("Registration Completed, reassignment not possible",
+						HttpStatus.BAD_REQUEST, "INVALID.DATA");
+			center.setSalesRepId(phVO.getRepId());
+			break;
+		case FLEX_INSTALLATION:
+			if (center.getFlex() != null) {
+				if (!flexSalesRep.contains(phVO.getRepId())) {
 					throw new BluewheelBusinessException("Flex Rep Id does not match with existing flex rep ids",
 							HttpStatus.BAD_REQUEST, "INVALID.DATA");
 				}
-				if(center.getFlex().getFlexInstallationStatus().equals(FlexStatusEnum.FlexInstallationcomplete.name()))
-					throw new BluewheelBusinessException("Flex Installation Completed, reassignment not possible",HttpStatus.BAD_REQUEST,"INVALID.DATA");
+				if (center.getFlex().getFlexInstallationStatus().equals(FlexStatusEnum.FlexInstallationcomplete.name()))
+					throw new BluewheelBusinessException("Flex Installation Completed, reassignment not possible",
+							HttpStatus.BAD_REQUEST, "INVALID.DATA");
 
 				center.getFlex().setFlexRepId(phVO.getRepId());
 				break;
-			case VERIFICATION:
-				if ( !verifierSalesRep.contains(phVO.getRepId())) {
+			}
+			throw new BluewheelBusinessException("Flex Details not found", HttpStatus.NOT_FOUND, "INVALID.REQUEST");
+
+		case VERIFICATION:
+			if (center.getVerification() != null) {
+				if (!verifierSalesRep.contains(phVO.getRepId())) {
 					throw new BluewheelBusinessException(
 							"Verifier Rep Id does not match with existing verifier rep ids for verifying a service center",
 							HttpStatus.BAD_REQUEST, "INVALID.DATA");
 				}
-				if(center.getVerification().getVerificationStatus().equals(VerificationStatusEnum.Verified.name()))
-					throw new BluewheelBusinessException("Verification Completed, reassignment not possible",HttpStatus.BAD_REQUEST,"INVALID.DATA");
+				if (center.getVerification().getVerificationStatus().equals(VerificationStatusEnum.Verified.name()))
+					throw new BluewheelBusinessException("Verification Completed, reassignment not possible",
+							HttpStatus.BAD_REQUEST, "INVALID.DATA");
 				center.getVerification().setVerifierRepId(phVO.getRepId());
 				break;
-			case PHOTOGRAPHY:
-				if ( !phSalesRep.contains(phVO.getRepId())) {
-					throw new BluewheelBusinessException("Photography Rep Id does not match with existing photography rep ids",
+			}
+			throw new BluewheelBusinessException("Verfifcation Details not found", HttpStatus.NOT_FOUND,
+					"INVALID.REQUEST");
+
+		case PHOTOGRAPHY:
+			if (center.getPhotography() != null) {
+				if (!phSalesRep.contains(phVO.getRepId())) {
+					throw new BluewheelBusinessException(
+							"Photography Rep Id does not match with existing photography rep ids",
 							HttpStatus.BAD_REQUEST, "INVALID.DATA");
 				}
-				if(center.getPhotography().getPhStatus().equals(StatusEnum.complete.name()))
-					throw new BluewheelBusinessException("Photography Completed, reassignment not possible",HttpStatus.BAD_REQUEST,"INVALID.DATA");
+				if (center.getPhotography().getPhStatus().equals(StatusEnum.complete.name()))
+					throw new BluewheelBusinessException("Photography Completed, reassignment not possible",
+							HttpStatus.BAD_REQUEST, "INVALID.DATA");
 				center.getPhotography().setPhRepId(phVO.getRepId());
 				break;
-			case TRAINING:
-				if ( !tainingAndOnboardSalesRep.contains(phVO.getRepId())) {
-					throw new BluewheelBusinessException("Training Rep Id does not match with existing training rep ids",
-							HttpStatus.BAD_REQUEST, "INVALID.DATA");
+			}
+			throw new BluewheelBusinessException("Photography Details not found", HttpStatus.NOT_FOUND,
+					"INVALID.REQUEST");
+
+		case TRAINING:
+			if (center.getTraining() != null) {
+				if (!tainingAndOnboardSalesRep.contains(phVO.getRepId())) {
+					throw new BluewheelBusinessException(
+							"Training Rep Id does not match with existing training rep ids", HttpStatus.BAD_REQUEST,
+							"INVALID.DATA");
 				}
-				if(center.getTraining().getTrainingStatus().equals(StatusEnum.complete.name()))
-					throw new BluewheelBusinessException("Training Completed, reassignment not possible",HttpStatus.BAD_REQUEST,"INVALID.DATA");
+				if (center.getTraining().getTrainingStatus().equals(StatusEnum.complete.name()))
+					throw new BluewheelBusinessException("Training Completed, reassignment not possible",
+							HttpStatus.BAD_REQUEST, "INVALID.DATA");
 				center.getTraining().setTrRepId(phVO.getRepId());
 				break;
-			case ONBOARDING:
+			}
+			throw new BluewheelBusinessException("Training Details not found", HttpStatus.NOT_FOUND, "INVALID.REQUEST");
+
+		case ONBOARDING:
+			if (center.getOnboard() != null) {
 				if (!tainingAndOnboardSalesRep.contains(phVO.getRepId())) {
-					throw new BluewheelBusinessException("Training Rep Id does not match with existing training rep ids",
-							HttpStatus.BAD_REQUEST, "INVALID.DATA");
+					throw new BluewheelBusinessException(
+							"Training Rep Id does not match with existing training rep ids", HttpStatus.BAD_REQUEST,
+							"INVALID.DATA");
 				}
-				if(center.getOnboard().getOnboardStatus().equals(StatusEnum.complete.name()))
-					throw new BluewheelBusinessException("Onboarding Completed, reassignment not possible",HttpStatus.BAD_REQUEST,"INVALID.DATA");
+				if (center.getOnboard().getOnboardStatus().equals(StatusEnum.complete.name()))
+					throw new BluewheelBusinessException("Onboarding Completed, reassignment not possible",
+							HttpStatus.BAD_REQUEST, "INVALID.DATA");
 
 				center.getOnboard().setTrRepId(phVO.getRepId());
 				break;
-			
-				
+			}
+			throw new BluewheelBusinessException("Onboarding Details not found", HttpStatus.NOT_FOUND,
+					"INVALID.REQUEST");
+
 		}
 		servicecenterRepo.save(center);
 		return "ReAssigned successfully";
