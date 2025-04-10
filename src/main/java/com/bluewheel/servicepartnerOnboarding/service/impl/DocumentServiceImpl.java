@@ -91,15 +91,16 @@ public class DocumentServiceImpl implements DocumentService {
 		}
 		doc.setDocCategory(docCategory);
 		doc.setFilename(documentvo.getOriginalFilename());
-		doc.setKey(buildKey(id, docCategory, documentvo.getOriginalFilename()));
-		spaceServive.uploadFile(doc.getKey(), documentvo);
 		doc = docRepo.save(doc);
+		doc.setKey(buildKey(id, docCategory,doc.getId(), documentvo.getOriginalFilename()));
+		spaceServive.uploadFile(doc.getKey(), documentvo);
+		docRepo.save(doc);
 		return doc.getId();
 
 	}
 
-	private String buildKey(Integer id, String docCategory, String filename) {
-		return id + "/" + docCategory + "/" + filename;
+	private String buildKey(Integer id, String docCategory, Integer docId, String filename) {
+		return id + "/" + docCategory + "/"+ docId +"/"+ filename;
 	}
 
 	@Override
