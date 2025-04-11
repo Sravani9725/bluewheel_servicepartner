@@ -23,4 +23,14 @@ public interface DocumentsRepository extends JpaRepository<Documents, Integer> {
 
 	List<Documents> findByTraining(Training training);
 
+	List<Documents> getByServiceCenterAndDocCategory(ServiceCenter serviceCenter, String docCategory);
+
+	List<Documents> getByFlexAndDocCategory(Flex flex, String docCategory);
+
+	List<Documents> getByOnboardAndDocCategory(Onboard serviceCenter, String docCategory);
+
+	List<Documents> getByVerificationAndDocCategory(Verification serviceCenter, String docCategory);
+
+	List<Documents> getByTrainingAndDocCategory(Training training, String docCategory);
+
 }

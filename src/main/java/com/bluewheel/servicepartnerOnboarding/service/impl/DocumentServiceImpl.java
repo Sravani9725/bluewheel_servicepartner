@@ -51,12 +51,17 @@ public class DocumentServiceImpl implements DocumentService {
 	@Override
 	public Integer uploadDocument(@Valid MultipartFile documentvo, String docCategory, Integer id) {
 		Documents doc = new Documents();
+		List<Documents> docs =  new ArrayList<Documents>();
+		String fileName = documentvo.getOriginalFilename();
 		switch (DocumentCategoryEnum.valueOf(docCategory)) {
 		case REGISTRATION:
 			Optional<ServiceCenter> sc = serviceCenterRepository.findById(id);
 			if (sc.isEmpty())
 				throw new BluewheelBusinessException("Serice center not found with give id", HttpStatus.NOT_FOUND,
 						"INVALID.DATA");
+			docs = docRepo.getByServiceCenterAndDocCategory(sc.get(),docCategory);
+			if(!docs.isEmpty())
+				fileName+="_"+docs.size();
 			doc.setServiceCenter(sc.get());
 			break;
 		case FLEX_INSTALLATION:
@@ -64,6 +69,9 @@ public class DocumentServiceImpl implements DocumentService {
 			if (flex.isEmpty())
 				throw new BluewheelBusinessException("Flex installation not found with give id", HttpStatus.NOT_FOUND,
 						"INVALID.DATA");
+			docs = docRepo.getByFlexAndDocCategory(flex.get(),docCategory);
+			if(!docs.isEmpty())
+				fileName+="_"+docs.size();
 			doc.setFlex(flex.get());
 			break;
 		case ONBOARDING:
@@ -71,6 +79,9 @@ public class DocumentServiceImpl implements DocumentService {
 			if (onboard.isEmpty())
 				throw new BluewheelBusinessException("Onboarding details not found with give id", HttpStatus.NOT_FOUND,
 						"INVALID.DATA");
+			docs = docRepo.getByOnboardAndDocCategory(onboard.get(),docCategory);
+			if(!docs.isEmpty())
+				fileName+="_"+docs.size();
 			doc.setOnboard(onboard.get());
 			break;
 		case VERIFICATION:
@@ -78,10 +89,16 @@ public class DocumentServiceImpl implements DocumentService {
 			if (verification.isEmpty())
 				throw new BluewheelBusinessException("Onboarding details not found with give id", HttpStatus.NOT_FOUND,
 						"INVALID.DATA");
+			docs = docRepo.getByVerificationAndDocCategory(verification.get(),docCategory);
+			if(!docs.isEmpty())
+				fileName+="_"+docs.size();
 			doc.setVerification(verification.get());
 			break;
 		case TRAINING:
 			Optional<Training> training = trainingRepo.findById(id);
+			docs = docRepo.getByTrainingAndDocCategory(training.get(),docCategory);
+			if(!docs.isEmpty())
+				fileName+="_"+docs.size();
 			if (training.isEmpty())
 				throw new BluewheelBusinessException("Onboarding details not found with give id", HttpStatus.NOT_FOUND,
 						"INVALID.DATA");
@@ -89,10 +106,11 @@ public class DocumentServiceImpl implements DocumentService {
 			break;
 
 		}
+		
 		doc.setDocCategory(docCategory);
 		doc.setFilename(documentvo.getOriginalFilename());
 		doc = docRepo.save(doc);
-		doc.setKey(buildKey(id, docCategory,doc.getId(), documentvo.getOriginalFilename()));
+		doc.setKey(buildKey(id, docCategory,doc.getId(), fileName));
 		spaceServive.uploadFile(doc.getKey(), documentvo);
 		docRepo.save(doc);
 		return doc.getId();
